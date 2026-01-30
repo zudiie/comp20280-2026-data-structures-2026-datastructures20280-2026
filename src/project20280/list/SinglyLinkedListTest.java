@@ -10,7 +10,7 @@ class SinglyLinkedListTest {
 
     @Test
     void testIsEmpty() {
-        List<Integer> ll = new SinglyLinkedList<Integer>();
+        List<Integer> ll = new SinglyLinkedList<Integer>();;
         assertTrue(ll.isEmpty());
         assertEquals("[]", ll.toString());
 

@@ -74,29 +74,53 @@ public class SinglyLinkedList<E> implements List<E> {
 
     //@Override
     public int size() {
+        int size = 0;
         Node<E> walk = head;
         while (walk != null) {
             size++;
             walk = walk.getNext();
         }
-        return 0;
+        return size;
     }
 
     //@Override
     public boolean isEmpty() {
-        // TODO
-        return false;
+        if (head == null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public E get(int position) {
-        // TODO
-        return null;
+        Node<E> walk = head;
+        E e = null;
+        for (int i = 0; i < position; i++) {
+            walk = walk.getNext();
+        }
+        return walk.element;
     }
 
     @Override
     public void add(int position, E e) {
-        // TODO
+        Node<E> walk = head;
+        Node<E> newest = new Node<E>(e, null, null);
+        if (position == 0) {
+            head = new Node<E>(e, head, null);;
+            size++;
+        } else {
+            for (int i = 1; i < position; i++) {
+                if (walk.getNext() == null) {
+                    throw new IllegalArgumentException("No such position");
+                } else {
+                    walk = walk.getNext();
+                }
+            }
+            newest.setNext(walk.getNext());
+            walk.setNext(newest);
+            size++;
+        }
     }
 
 
@@ -108,25 +132,70 @@ public class SinglyLinkedList<E> implements List<E> {
 
     @Override
     public void addLast(E e) {
-
+        Node<E> newest =  new Node<E>(e, null, null);
+        Node<E> last = head;
+        if (last == null) {
+            head = newest;
+        } else {
+            while (last.getNext() != null) {
+                last = last.getNext();
+            }
+            last.setNext(newest);
+        }
+        size++;
     }
 
     @Override
     public E remove(int position) {
-        // TODO
-        return null;
+        Node<E> walk = head;
+        Node<E> prev = null;
+        E e = null;
+        for (int i = 0; i < position; i++) {
+            if (walk.getNext() == null){
+                return null;
+            }
+            prev = walk;
+            walk = walk.getNext();
+            e = walk.element;
+        }
+        prev.setNext(walk.getNext());
+        size--;
+        return e;
     }
 
     @Override
     public E removeFirst() {
-        // TODO
-        return null;
+        E e = null;
+        if (head == null) {
+            return null;
+        } else {
+            e =  head.element;
+            head = head.getNext();
+        }
+        size--;
+        return e;
     }
 
     @Override
     public E removeLast() {
-        // TODO
-        return null;
+        Node<E> walk = head;
+        E e = null;
+        Node<E> prev = null;
+        if (head == null) {
+            return null;
+        } else if (head.getNext() == null) {
+            e = head.element;
+            head = null;
+        } else {
+            while (walk.getNext() != null) {
+                prev = walk;
+                walk = walk.getNext();
+            }
+            prev.setNext(null);
+            e =  walk.element;
+        }
+        size--;
+        return e;
     }
 
     //@Override
@@ -167,20 +236,21 @@ public class SinglyLinkedList<E> implements List<E> {
         SinglyLinkedList<Integer> ll = new SinglyLinkedList<Integer>();
         System.out.println("ll " + ll + " isEmpty: " + ll.isEmpty());
         //LinkedList<Integer> ll = new LinkedList<Integer>();
-
+        System.out.println(ll.isEmpty());
         ll.addFirst(0);
         ll.addFirst(1);
         ll.addFirst(2);
         ll.addFirst(3);
         ll.addFirst(4);
         ll.addLast(-1);
-        //ll.removeLast();
+        ll.removeLast();
         //ll.removeFirst();
         //System.out.println("I accept your apology");
         //ll.add(3, 2);
         System.out.println(ll);
         ll.remove(5);
         System.out.println(ll);
+        System.out.println(ll.isEmpty());
 
     }
 }
