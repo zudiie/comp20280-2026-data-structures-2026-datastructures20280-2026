@@ -34,8 +34,6 @@ class DoublyLinkedListTest {
 
         ll.removeFirst();
 		assertNull(ll.first());
-
-
     }
 
     @Test
