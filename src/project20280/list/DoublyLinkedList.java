@@ -99,6 +99,7 @@ public class DoublyLinkedList<E> implements List<E> {
             curr = curr.getNext();
         }
         remove(curr);
+        size--;
         return curr.data;
     }
 
@@ -135,6 +136,7 @@ public class DoublyLinkedList<E> implements List<E> {
                 } else {
                     curr.getPrev().setNext(curr.getNext());
                 }
+                size--;
                 return curr.data;
             }
             curr = curr.getNext();
