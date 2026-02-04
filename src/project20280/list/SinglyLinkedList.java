@@ -189,6 +189,16 @@ public class SinglyLinkedList<E> implements List<E> {
         head = prev;
     }
 
+    public SinglyLinkedList<E> copy(){
+        SinglyLinkedList<E> twin = new SinglyLinkedList<E>();
+        Node<E> tmp = head;
+        while (tmp != null) {
+            twin.addLast(tmp.getElement());
+            tmp = tmp.getNext();
+        }
+        return twin;
+    }
+
     @Override
     public E removeLast() {
         Node<E> walk = head;
