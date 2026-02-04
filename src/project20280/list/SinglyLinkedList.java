@@ -3,6 +3,7 @@ package project20280.list;
 import project20280.interfaces.List;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 
 public class SinglyLinkedList<E> implements List<E> {
 
@@ -221,6 +222,34 @@ public class SinglyLinkedList<E> implements List<E> {
         return e;
     }
 
+    public SinglyLinkedList<E> merge(SinglyLinkedList<E> list2) {
+
+         SinglyLinkedList<E> newList = new SinglyLinkedList<E>();
+        Node<E> p1 = this.head;
+        Node<E> p2 = list2.head;
+        while (p1 != null && p2 != null) {
+            if (((Comparable<E>) p1.getElement()).compareTo(p2.getElement()) <= 0) {
+                newList.addLast(p1.getElement());
+                p1 = p1.getNext();
+            } else {
+                newList.addLast(p2.getElement());
+                p2 = p2.getNext();
+            }
+        }
+
+        while (p1 != null) {
+            newList.addLast(p1.getElement());
+            p1 = p1.getNext();
+        }
+
+        while (p2 != null) {
+            newList.addLast(p2.getElement());
+            p2 = p2.getNext();
+        }
+
+        return newList;
+    }
+
     //@Override
     public Iterator<E> iterator() {
         return new SinglyLinkedListIterator<E>();
@@ -257,6 +286,16 @@ public class SinglyLinkedList<E> implements List<E> {
 
 
     public static void main(String[] args) {
+//        SinglyLinkedList<Integer> list1 = new SinglyLinkedList<Integer>();
+//        SinglyLinkedList<Integer> list2 = new SinglyLinkedList<Integer>();
+//        list1.addFirst(5);
+//        list1.addFirst(4);
+//        list1.addFirst(3);
+//        list2.addFirst(9);
+//        list2.addFirst(1);
+//        SinglyLinkedList<Integer> result = list1.merge(list2);
+//        System.out.println(result);
+
         SinglyLinkedList<Integer> ll = new SinglyLinkedList<Integer>();
         System.out.println("ll " + ll + " isEmpty: " + ll.isEmpty());
         //LinkedList<Integer> ll = new LinkedList<Integer>();
