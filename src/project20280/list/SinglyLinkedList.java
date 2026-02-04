@@ -176,6 +176,19 @@ public class SinglyLinkedList<E> implements List<E> {
         return e;
     }
 
+    public void reverse() {
+        Node<E> prev = null;
+        Node<E> curr = head;
+        Node<E> next;
+        while (curr != null) {
+            next = curr.getNext();
+            curr.setNext(prev);
+            prev = curr;
+            curr = next;
+        }
+        head = prev;
+    }
+
     @Override
     public E removeLast() {
         Node<E> walk = head;
@@ -232,6 +245,7 @@ public class SinglyLinkedList<E> implements List<E> {
         return sb.toString();
     }
 
+
     public static void main(String[] args) {
         SinglyLinkedList<Integer> ll = new SinglyLinkedList<Integer>();
         System.out.println("ll " + ll + " isEmpty: " + ll.isEmpty());
@@ -243,8 +257,10 @@ public class SinglyLinkedList<E> implements List<E> {
         ll.addFirst(3);
         ll.addFirst(4);
         ll.addLast(-1);
+        ll.reverse();
+        System.out.println(ll);
         ll.removeLast();
-        //ll.removeFirst();
+        ll.removeFirst();
         //System.out.println("I accept your apology");
         //ll.add(3, 2);
         System.out.println(ll);
