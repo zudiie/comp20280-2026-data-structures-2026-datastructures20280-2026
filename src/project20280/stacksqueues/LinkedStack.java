@@ -2,6 +2,7 @@ package project20280.stacksqueues;
 
 import project20280.interfaces.Stack;
 import project20280.list.DoublyLinkedList;
+import project20280.list.SinglyLinkedList;
 
 public class LinkedStack<E> implements Stack<E> {
 
@@ -11,7 +12,7 @@ public class LinkedStack<E> implements Stack<E> {
     }
 
     public LinkedStack() {
-        // TODO
+        ll = new DoublyLinkedList<>();
     }
 
     @Override
@@ -26,19 +27,18 @@ public class LinkedStack<E> implements Stack<E> {
 
     @Override
     public void push(E e) {
-        // TODO
+        ll.addFirst(e);
     }
 
     @Override
     public E top() {
-        // TODO
-        return null;
+        return ll.get(0);
     }
 
     @Override
     public E pop() {
-        // TODO
-        return null;
+        E e = ll.removeFirst();
+        return e;
     }
 
     public String toString() {

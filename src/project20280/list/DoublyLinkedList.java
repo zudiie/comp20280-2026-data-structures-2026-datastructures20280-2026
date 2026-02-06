@@ -125,23 +125,12 @@ public class DoublyLinkedList<E> implements List<E> {
     }
 
     private E remove(Node<E> n) {
-        Node<E> curr = head.getNext();
-
-        while (curr.getNext() != null) {
-            if (curr == n) {
-                if (curr.getPrev() == null) {
-                    head.setNext(curr.getNext());
-                } else if (curr.getNext() == null) {
-                    curr.getPrev().setNext(null);
-                } else {
-                    curr.getPrev().setNext(curr.getNext());
-                }
-                size--;
-                return curr.data;
-            }
-            curr = curr.getNext();
-        }
-        return null;
+        Node<E> prev = n.getPrev();
+        Node<E> next = n.getNext();
+        prev.setNext(next);
+        next.setPrev(prev);
+        size--;
+        return n.data;
     }
 
     public E first() {
