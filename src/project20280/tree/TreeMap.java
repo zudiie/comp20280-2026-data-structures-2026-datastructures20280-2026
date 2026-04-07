@@ -60,7 +60,11 @@ public class TreeMap<K, V> extends AbstractSortedMap<K, V> {
          * Relinks a parent node with its oriented child node.
          */
         private void relink(Node<Entry<K, V>> parent, Node<Entry<K, V>> child, boolean makeLeftChild) {
-            // TODO
+            child.setParent(parent);
+            if (makeLeftChild)
+                parent.setLeft(child);
+            else
+                parent.setRight(child);
         }
 
         /**
@@ -79,6 +83,23 @@ public class TreeMap<K, V> extends AbstractSortedMap<K, V> {
          */
         public void rotate(Position<Entry<K, V>> p) {
             // TODO
+            Node<Entry<K, V>> x = validate(p);
+            Node<Entry<K, V>> y = x.getParent();
+            Node<Entry<K, V>> z = y.getParent();
+            if (z == null) {
+                root = x;                                // x becomes root of the tree
+                x.setParent(null);
+            } else {
+                relink(z, x, y == z.getLeft());          // x becomes direct child of z
+            }
+            // now rotate x and y, including transfer of middle subtree
+            if (x == y.getLeft()) {
+                relink(y, x.getRight(), true);           // x's right child becomes y's left
+                relink(x, y, false);                     // y becomes x's right child
+            } else {
+                relink(y, x.getLeft(), false);           // x's left child becomes y's right
+                relink(x, y, true);                      // y becomes left child of x
+            }
         }
 
         /**
@@ -111,7 +132,16 @@ public class TreeMap<K, V> extends AbstractSortedMap<K, V> {
          */
         public Position<Entry<K, V>> restructure(Position<Entry<K, V>> x) {
             // TODO
-            return null;
+            Position<Entry<K, V>> y = parent(x);
+            Position<Entry<K, V>> z = parent(y);
+            if ((x == right(y)) == (y == right(z))) {   // matching alignments
+                rotate(y);                                // single rotation (of y)
+                return y;                                 // y is new subtree root
+            } else {                                    // opposite alignments
+                rotate(x);                                // double rotation (of x)
+                rotate(x);
+                return x;                                 // x is new subtree root
+            }
         }
     } // ----------- end of nested BalanceableBinaryTree class -----------
 

@@ -22,7 +22,7 @@ public class SinglyLinkedList<E> implements List<E> {
          * @param e the element to be stored
          * @param n reference to a node that should follow the new node
          */
-        public Node(E e, Node<E> n, E element) {
+        public Node(E e, Node<E> n) {
             this.element = e;
             this.next = n;
         }
@@ -73,7 +73,7 @@ public class SinglyLinkedList<E> implements List<E> {
     public SinglyLinkedList() {
     }              // constructs an initially empty list
 
-    //@Override
+    @Override
     public int size() {
         int size = 0;
         Node<E> walk = head;
@@ -84,19 +84,14 @@ public class SinglyLinkedList<E> implements List<E> {
         return size;
     }
 
-    //@Override
+    @Override
     public boolean isEmpty() {
-        if (head == null) {
-            return true;
-        } else {
-            return false;
-        }
+        return head == null;
     }
 
     @Override
     public E get(int position) {
         Node<E> walk = head;
-        E e = null;
         for (int i = 0; i < position; i++) {
             walk = walk.getNext();
         }
@@ -106,9 +101,9 @@ public class SinglyLinkedList<E> implements List<E> {
     @Override
     public void add(int position, E e) {
         Node<E> walk = head;
-        Node<E> newest = new Node<E>(e, null, null);
+        Node<E> newest = new Node<E>(e, null);
         if (position == 0) {
-            head = new Node<E>(e, head, null);;
+            head = new Node<E>(e, head);;
             size++;
         } else {
             for (int i = 1; i < position; i++) {
@@ -124,16 +119,15 @@ public class SinglyLinkedList<E> implements List<E> {
         }
     }
 
-
     @Override
     public void addFirst(E e) {
-        head = new Node<E>(e, head, null);
+        head = new Node<E>(e, head);
         size++;
     }
 
     @Override
     public void addLast(E e) {
-        Node<E> newest =  new Node<E>(e, null, null);
+        Node<E> newest =  new Node<E>(e, null);
         Node<E> last = head;
         if (last == null) {
             head = newest;
@@ -178,26 +172,36 @@ public class SinglyLinkedList<E> implements List<E> {
     }
 
     public void reverse() {
-        Node<E> prev = null;
-        Node<E> curr = head;
-        Node<E> next;
-        while (curr != null) {
-            next = curr.getNext();
-            curr.setNext(prev);
-            prev = curr;
-            curr = next;
+        if (head != null){
+            head = reverseHelper(null, head);
         }
-        head = prev;
     }
 
-    public SinglyLinkedList<E> copy(){
-        SinglyLinkedList<E> twin = new SinglyLinkedList<E>();
-        Node<E> tmp = head;
-        while (tmp != null) {
-            twin.addLast(tmp.getElement());
-            tmp = tmp.getNext();
+    private Node<E> reverseHelper(Node<E> curr, Node<E> succ) {
+        Node<E> n = succ.next;
+        succ.next = curr;
+        if (n == null) {
+            return succ;
         }
+        return reverseHelper(succ, n);
+    }
+
+    // q7
+    public SinglyLinkedList<E> copy(){
+        SinglyLinkedList<E> twin = new SinglyLinkedList<>();
+        twin.head = copyHelper(this.head);
+        twin.size = this.size;
         return twin;
+    }
+
+    private Node<E> copyHelper(Node<E> current) {
+        if (current == null) {
+            return null;
+        } else {
+            Node<E> newNode = new Node<>(current.getElement(), null);
+            newNode.next = copyHelper(current.next);
+            return newNode;
+        }
     }
 
     @Override
@@ -223,8 +227,7 @@ public class SinglyLinkedList<E> implements List<E> {
     }
 
     public SinglyLinkedList<E> merge(SinglyLinkedList<E> list2) {
-
-         SinglyLinkedList<E> newList = new SinglyLinkedList<E>();
+        SinglyLinkedList<E> newList = new SinglyLinkedList<E>();
         Node<E> p1 = this.head;
         Node<E> p2 = list2.head;
         while (p1 != null && p2 != null) {
@@ -250,7 +253,7 @@ public class SinglyLinkedList<E> implements List<E> {
         return newList;
     }
 
-    //@Override
+    @Override
     public Iterator<E> iterator() {
         return new SinglyLinkedListIterator<E>();
     }
@@ -286,15 +289,15 @@ public class SinglyLinkedList<E> implements List<E> {
 
 
     public static void main(String[] args) {
-//        SinglyLinkedList<Integer> list1 = new SinglyLinkedList<Integer>();
-//        SinglyLinkedList<Integer> list2 = new SinglyLinkedList<Integer>();
-//        list1.addFirst(5);
-//        list1.addFirst(4);
-//        list1.addFirst(3);
-//        list2.addFirst(9);
-//        list2.addFirst(1);
-//        SinglyLinkedList<Integer> result = list1.merge(list2);
-//        System.out.println(result);
+        SinglyLinkedList<Integer> list1 = new SinglyLinkedList<Integer>();
+        SinglyLinkedList<Integer> list2 = new SinglyLinkedList<Integer>();
+        list1.addFirst(5);
+        list1.addFirst(4);
+        list1.addFirst(3);
+        list2.addFirst(9);
+        list2.addFirst(1);
+        SinglyLinkedList<Integer> result = list1.merge(list2);
+        System.out.println(result);
 
         SinglyLinkedList<Integer> ll = new SinglyLinkedList<Integer>();
         System.out.println("ll " + ll + " isEmpty: " + ll.isEmpty());
@@ -306,16 +309,19 @@ public class SinglyLinkedList<E> implements List<E> {
         ll.addFirst(3);
         ll.addFirst(4);
         ll.addLast(-1);
+        System.out.println(ll);
         ll.reverse();
         System.out.println(ll);
-        ll.removeLast();
-        ll.removeFirst();
-        //System.out.println("I accept your apology");
-        //ll.add(3, 2);
-        System.out.println(ll);
-        ll.remove(5);
-        System.out.println(ll);
-        System.out.println(ll.isEmpty());
+        SinglyLinkedList<Integer> ll2 = ll.copy();
+        System.out.println(ll2);
+//        ll.removeLast();
+//        ll.removeFirst();
+//        //System.out.println("I accept your apology");
+//        //ll.add(3, 2);
+//        System.out.println(ll);
+//        ll.remove(5);
+//        System.out.println(ll);
+//        System.out.println(ll.isEmpty());
 
     }
 }

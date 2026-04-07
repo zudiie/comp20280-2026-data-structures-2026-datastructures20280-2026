@@ -84,7 +84,7 @@ public class CircularlyLinkedList<E> implements List<E> {
 
     @Override
     public E remove(int i) {
-        if  (size == 0 || i < 0 || i >= size) {
+        if (size == 0 || i < 0 || i >= size) {
             return null;
         }
 

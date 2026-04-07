@@ -43,40 +43,42 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
      * @param values an array of the initial values for the priority queue
      */
     public HeapPriorityQueue(K[] keys, V[] values) {
-        // TODO
+        super();
+        int n = Math.min(keys.length, values.length);
+        for (int i = 0; i < n; i++) {
+            heap.add(new PQEntry<>(keys[i], values[i]));
+        }
+        heapify(); // turn the random array into a valid heap
     }
 
     // protected utilities
     protected int parent(int j) {
-        // TODO
-        return 0;
+        return (j - 1) / 2;
     }
 
     protected int left(int j) {
-        // TODO
-        return 0;
+        return 2*j + 1;
     }
 
     protected int right(int j) {
-        // TODO
-        return 0;
+        return 2*j + 2;
     }
 
     protected boolean hasLeft(int j) {
-        // TODO
-        return false;
+        return left(j) < heap.size(); //if the calculated index is within the lsit size
     }
 
     protected boolean hasRight(int j) {
-        // TODO
-        return false;
+        return right(j) < heap.size();
     }
 
     /**
      * Exchanges the entries at indices i and j of the array list.
      */
     protected void swap(int i, int j) {
-        // TODO
+        Entry<K, V> temp = heap.get(i);
+        heap.set(i, heap.get(j));
+        heap.set(j, temp);
     }
 
     /**
@@ -84,21 +86,51 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
      * property.
      */
     protected void upheap(int j) {
-        // TODO
+        while (j > 0) { //conitnue until reaching the root
+            int parent = parent(j);
+            // if child is smaller than parent, swap them
+            if (compare(heap.get(j), heap.get(parent)) >= 0) {
+                break;
+            }
+            swap(j, parent);
+            j = parent; // move up to the parent's index
+        }
     }
 
     /**
      * Moves the entry at index j lower, if necessary, to restore the heap property.
      */
     protected void downheap(int j) {
-        // TODO
+        while (hasLeft(j)) {
+            int leftIndex = left(j);
+            int smallChildIndex = leftIndex;
+
+            if (hasRight(j)) {
+                int rightIndex = right(j);
+                //find which of the two children is smaller
+                if (compare(heap.get(leftIndex), heap.get(rightIndex)) > 0) {
+                    smallChildIndex = rightIndex;
+                }
+            }
+            // if the smallest child is not smaller than the parent, we are done
+            if (compare(heap.get(smallChildIndex), heap.get(j)) >= 0) {
+                break; // heap property is verified
+            }
+
+            swap(j, smallChildIndex);
+            j = smallChildIndex; // move down to the child's index
+        }
     }
 
     /**
      * Performs a bottom-up construction of the heap in linear time.
      */
     protected void heapify() {
-        // TODO
+        //start from the parent of the last element and go backwards to the root
+        int startIndex = parent(size() - 1); // start at the LAST non-leaf node
+        for (int j = startIndex; j >= 0; j--) {
+            downheap(j);
+        }
     }
 
     // public methods
@@ -133,8 +165,11 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
      */
     @Override
     public Entry<K, V> insert(K key, V value) throws IllegalArgumentException {
-        // TODO
-        return null;
+        checkKey(key); // validaiton
+        Entry<K, V> newest = new PQEntry<>(key, value);
+        heap.add(newest); // add to the very end of the list
+        upheap(heap.size() - 1); // upheap newly added entry to the right spot
+        return newest;
     }
 
     /**
@@ -144,8 +179,12 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
      */
     @Override
     public Entry<K, V> removeMin() {
-        // TODO
-        return null;
+        if (heap.isEmpty()) return null;
+        Entry<K, V> ans = heap.get(0); //the min is always at the root (index 0)
+        swap(0, heap.size() - 1); //move the last elemtn to the root
+        heap.remove(heap.size() - 1); // remove the old min
+        downheap(0); //sink the new root down to the right spot
+        return ans;
     }
 
     public String toString() {
@@ -174,6 +213,19 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
         }
     }
 
+    // q6
+    public static <E> void pqSort(E[] arr, Comparator<E> comp) {
+        int n  =arr.length;
+        HeapPriorityQueue<E, Void> pq = new HeapPriorityQueue<>(comp);
+        for (int i = 0; i < n; i++) {
+            pq.insert(arr[i], null);
+        }
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = pq.removeMin().getKey();
+        }
+    }
+
     public static void main(String[] args) {
         Integer[] rands = new Integer[]{35, 26, 15, 24, 33, 4, 12, 1, 23, 21, 2, 5};
         HeapPriorityQueue<Integer, Integer> pq = new HeapPriorityQueue<>(rands, rands);
@@ -189,5 +241,20 @@ public class HeapPriorityQueue<K, V> extends AbstractPriorityQueue<K, V> {
         //        2,            4,
         //   23,     21,      5, 12,
         // 24, 26, 35, 33, 15]
+
+        int[] sizes = {1000, 10000, 100000, 1000000};
+
+        for (int n: sizes) {
+            Integer[] data = new Integer[n];
+            for (int i = 0; i < n; i++) {
+                data[i] = (int)(Math.random() * 100);
+            }
+            long start = System.currentTimeMillis();
+
+            pqSort(data, Integer::compareTo);
+
+            long end = System.currentTimeMillis();
+            System.out.println("\nn = " + n + " took " + (end - start) + "ms");
+        }
     }
 }
