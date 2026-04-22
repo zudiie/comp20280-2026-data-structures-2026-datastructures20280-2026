@@ -1,5 +1,6 @@
 package project20280.interfaces;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -93,6 +94,12 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
         public Iterator<K> iterator() {
             return new KeyIterator();
         }
+        @Override
+        public String toString() {
+            ArrayList<K> keys = new ArrayList<>();
+            for (K key : this) keys.add(key);
+            return keys.toString();
+        }
     } // ----------- end of nested KeyIterable class -----------
 
     /**
@@ -101,9 +108,7 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
      * @return iterable collection of the map's keys
      */
     @Override
-    public Iterable<K> keySet() {
-        return new KeyIterable();
-    }
+    public Iterable<K> keySet() { return new KeyIterable(); }
 
     // ---------------- nested ValueIterator class ----------------
     private class ValueIterator implements Iterator<V> {
